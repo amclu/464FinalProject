@@ -13,10 +13,10 @@ from zipfile import ZipFile
 
 sources = ['CNN International', 'The New York Times', 'The Guardian', 'Fox News', 'BBC News', 'Bloomberg Business', 'USA Today', 'The Wall Street Journal', 'Reuters', 'CNN Money']
 
-with ZipFile('top sites.zip') as myzip:
+with ZipFile('topsites.zip') as myzip:
     for source in sources:
         for i in range(15, 30):
-            with myzip.open('top sites/{}-{}.json'.format(source,i),'r') as f:
+            with myzip.open('topsites/{}-{}.json'.format(source,i),'r') as f:
                 data = f.read().decode('utf-8')
                 results = loads(data)["articles"]["results"]
                 for result in results:
