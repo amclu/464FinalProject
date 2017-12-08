@@ -1,8 +1,6 @@
 
 # coding: utf-8
 
-# In[1]:
-
 #create pandas dataframe from article data
 import pandas as pd
 import numpy as np
@@ -30,23 +28,17 @@ with ZipFile('top sites.zip') as myzip:
 df.tail()
 
 
-# In[2]:
-
 #randomize order
 df = df.sample(frac=1)
 D = df.text.values.tolist()
 c = df.source.values
 
 
-# In[3]:
-
 print (type(D), type(c))
 print (set(c))
 print (len(D))
 print (len(c))
 
-
-# In[4]:
 
 SPLIT_PERC = 0.8
 split_size = int(len(D)*SPLIT_PERC)
@@ -55,8 +47,6 @@ X_test = D[split_size:]
 y_train = c[:split_size]
 y_test = c[split_size:]
 
-
-# In[5]:
 
 from sklearn.cross_validation import cross_val_score, KFold
 from scipy.stats import sem
@@ -70,8 +60,6 @@ def evaluate_cross_validation(clf, X, y, K):
     print (("Mean score: {0:.3f} (+/-{1:.3f})").format(
         np.mean(scores), sem(scores)))
 
-
-# In[6]:
 
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
@@ -91,14 +79,10 @@ clf_3 = Pipeline([
 ])
 
 
-# In[7]:
-
 clfs = [clf_1, clf_2, clf_3]
 for clf in clfs:
     evaluate_cross_validation(clf, X_train, y_train, 5)
 
-
-# In[8]:
 
 clf_4 = Pipeline([
     ('vect', CountVectorizer(
@@ -108,12 +92,8 @@ clf_4 = Pipeline([
 ])
 
 
-# In[9]:
-
 evaluate_cross_validation(clf_4, X_train, y_train, 5)
 
-
-# In[10]:
 
 def get_stop_words():
     result = set()
@@ -122,12 +102,8 @@ def get_stop_words():
     return result
 
 
-# In[11]:
-
 stop_words = get_stop_words()
 
-
-# In[12]:
 
 clf_5 = Pipeline([
     ('vect', CountVectorizer(
@@ -138,12 +114,7 @@ clf_5 = Pipeline([
 ])
 
 
-# In[13]:
-
 evaluate_cross_validation(clf_5, X_train, y_train, 5)
-
-
-# In[14]:
 
 clf_7 = Pipeline([
     ('vect', CountVectorizer(
@@ -154,12 +125,7 @@ clf_7 = Pipeline([
 ])
 
 
-# In[15]:
-
 evaluate_cross_validation(clf_7, X_train, y_train, 5)
-
-
-# In[16]:
 
 from sklearn import metrics
 
@@ -182,12 +148,7 @@ def train_and_evaluate(clf, X_train, X_test, y_train, y_test):
     return mcm
 
 
-# In[17]:
-
 mcm = train_and_evaluate(clf_7, X_train, X_test, y_train, y_test)
-
-
-# In[18]:
 
 import matplotlib.pyplot as plt
 
@@ -222,17 +183,11 @@ def plotCM(conf_arr, labels, name):
     plt.savefig(name, format='png')
 
 
-# In[19]:
-
 plotCM(mcm, sorted(set(c)), 'top_NB_conf.png')
 
 
-# In[20]:
-
 #print (len(clf_7.named_steps['vect'].get_feature_names()))
 
-
-# In[21]:
 
 def print_top10(clf, class_labels):
     """Prints features with the highest coefficient values, per class"""
@@ -245,12 +200,8 @@ def print_top10(clf, class_labels):
             print(clf.named_steps['clf'].coef_[i][top10[k]])
 
 
-# In[22]:
-
 print_top10(clf_7, sorted(set(c)))
 
-
-# In[ ]:
 
 from sklearn.svm import LinearSVC
 
@@ -263,24 +214,13 @@ clf_8 = Pipeline([
 ])
 
 
-# In[ ]:
-
 evaluate_cross_validation(clf_8, X_train, y_train, 5)
 
-
-# In[ ]:
 
 mcm = train_and_evaluate(clf_8, X_train, X_test, y_train, y_test)
 
 
-# In[ ]:
-
 #plotCM(mcm, sorted(set(c)), 'top_SVM_conf.png')
 
 
-# In[ ]:
-
 print_top10(clf_8, sorted(set(c)))
-
-
-# In[ ]:
