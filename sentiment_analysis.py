@@ -5,6 +5,13 @@
 import pandas as pd
 import numpy as np
 
+"""
+AMHPC
+#if defined (_OPENMP)
+#include <omp.h>
+#endif
+"""
+
 columns = ['text', 'source']
 df = pd.DataFrame(data=np.zeros((0,len(columns))), columns=columns)
 
@@ -14,6 +21,13 @@ from zipfile import ZipFile
 sources = ['CNN International', 'The New York Times', 'The Guardian', 'Fox News', 'BBC News', 'Bloomberg Business', 'USA Today', 'The Wall Street Journal', 'Reuters', 'CNN Money']
 
 with ZipFile('topsites.zip') as myzip:
+
+"""
+AMHPC
+#if defined (_OPENMP)
+    pragma omp parallel for
+#endif
+"""
     for source in sources:
         for i in range(15, 30):
             with myzip.open('topsites/{}-{}.json'.format(source,i),'r') as f:
@@ -80,6 +94,12 @@ clf_3 = Pipeline([
 
 
 clfs = [clf_1, clf_2, clf_3]
+"""
+AMHPC
+# if defined (_OPENMP)
+    pragma omp parallel for
+# endif
+"""
 for clf in clfs:
     evaluate_cross_validation(clf, X_train, y_train, 5)
 
@@ -192,6 +212,14 @@ plotCM(mcm, sorted(set(c)), 'top_NB_conf.png')
 def print_top10(clf, class_labels):
     """Prints features with the highest coefficient values, per class"""
     feature_names = clf.named_steps['vect'].get_feature_names()
+    
+    """
+    AMHPC
+    # if defined (_OPENMP)
+    pragma omp parallel for
+    # endif
+    """
+    
     for i, class_label in enumerate(class_labels):
         top10 = np.argsort(clf.named_steps['clf'].coef_[i])[-10:]
         print("%s: %s" % (class_label,
