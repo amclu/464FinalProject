@@ -252,3 +252,11 @@ mcm = train_and_evaluate(clf_8, X_train, X_test, y_train, y_test)
 
 
 print_top10(clf_8, sorted(set(c)))
+
+""" 
+AMHPC
+Get Average Time
+double t_calc = getElapsedTime(t_start, getTimeStamp());
+    
+    print("Average time = %f (ms) per step, t_calc*1000.0);
+"""
